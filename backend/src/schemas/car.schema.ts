@@ -31,6 +31,14 @@ export const createCarSchema = z.object({
   entryDate: z.coerce.date({ error: "La fecha de ingreso no es valida" }),
   used: z.boolean({ error: "El campo usado debe ser verdadero o falso" }).optional(),
   description: z.string().trim().max(500, "La descripcion no puede superar los 500 caracteres").optional(),
+  // Imagen opcional: vacio, una URL externa (https://...) o una ruta servida por el front (/cars/foto.jpg)
+  imageUrl: z
+    .union([
+      z.literal(""),
+      z.url({ error: "La URL de la imagen no es valida" }).max(500),
+      z.string().regex(/^\/[\w\-./]+$/, "La ruta de la imagen no es valida").max(200),
+    ])
+    .optional(),
   active: z.boolean().optional(),
 });
 

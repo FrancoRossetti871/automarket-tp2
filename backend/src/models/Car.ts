@@ -12,6 +12,7 @@ export interface ICar {
   entryDate: Date;
   used: boolean;
   description: string;
+  imageUrl: string; // opcional: URL de una foto del auto
   active: boolean; // baja logica: false = dado de baja (no se muestra en la vista publica)
 }
 
@@ -64,6 +65,12 @@ const carSchema = new Schema<ICarDocument>(
       trim: true,
       default: "",
       maxlength: [500, "La descripcion no puede superar los 500 caracteres"],
+    },
+    imageUrl: {
+      type: String,
+      trim: true,
+      default: "",
+      maxlength: [500, "La URL de la imagen no puede superar los 500 caracteres"],
     },
     active: {
       type: Boolean,
