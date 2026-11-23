@@ -1,10 +1,11 @@
 import { z } from "zod";
+import { BODY_TYPES, FUELS, TRACTIONS, TRANSMISSIONS } from "../models/Car.js";
 
 const currentYear = new Date().getFullYear();
 
-export const ALLOWED_CAR_SORT_FIELDS = ["createdAt", "brand", "year", "price", "entryDate"] as const;
+export const ALLOWED_CAR_SORT_FIELDS = ["createdAt", "brand", "year", "price", "entryDate", "horsepower"] as const;
 
-// Listado: los filtros llegan como query string (?page=1&limit=6&search=ford&used=true),
+// Listado: los filtros llegan como query string (?page=1&limit=6&search=ford&used=true&fuel=diesel),
 // por eso se usa z.coerce para convertir los textos a numero.
 export const listCarsSchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
@@ -13,6 +14,9 @@ export const listCarsSchema = z.object({
   sortOrder: z.enum(["asc", "desc"]).default("desc"),
   search: z.string().trim().min(1).max(80).optional(),
   used: z.enum(["true", "false"]).transform((v) => v === "true").optional(),
+  fuel: z.enum(FUELS).optional(),
+  transmission: z.enum(TRANSMISSIONS).optional(),
+  bodyType: z.enum(BODY_TYPES).optional(),
   // Solo lo respeta el backend si quien consulta es admin (ver controller).
   includeInactive: z.enum(["true", "false"]).transform((v) => v === "true").optional(),
 });
@@ -30,6 +34,19 @@ export const createCarSchema = z.object({
   // Acepta "2026-11-23" o un ISO completo y lo convierte a Date.
   entryDate: z.coerce.date({ error: "La fecha de ingreso no es valida" }),
   used: z.boolean({ error: "El campo usado debe ser verdadero o falso" }).optional(),
+  // Ficha tecnica (todo opcional: el modelo tiene defaults)
+  engine: z.string().trim().max(60, "El motor no puede superar los 60 caracteres").optional(),
+  horsepower: z.number({ error: "La potencia debe ser un numero" }).int().min(0).max(2000, "La potencia maxima es 2000 CV").optional(),
+  transmission: z.enum(TRANSMISSIONS, { error: "Transmision no valida (manual o automatica)" }).optional(),
+  fuel: z.enum(FUELS, { error: `Combustible no valido (${FUELS.join(", ")})` }).optional(),
+  bodyType: z.enum(BODY_TYPES, { error: `Carroceria no valida (${BODY_TYPES.join(", ")})` }).optional(),
+  traction: z.enum(TRACTIONS, { error: "Traccion no valida (4x2 o 4x4)" }).optional(),
+  doors: z.number({ error: "Las puertas deben ser un numero" }).int().min(2, "Minimo 2 puertas").max(5, "Maximo 5 puertas").optional(),
+  color: z.string().trim().max(40, "El color no puede superar los 40 caracteres").optional(),
+  features: z
+    .array(z.string().trim().min(1).max(80, "Cada item de equipamiento admite hasta 80 caracteres"))
+    .max(20, "Maximo 20 items de equipamiento")
+    .optional(),
   description: z.string().trim().max(500, "La descripcion no puede superar los 500 caracteres").optional(),
   // Imagen opcional: vacio, una URL externa (https://...) o una ruta servida por el front (/cars/foto.jpg)
   imageUrl: z

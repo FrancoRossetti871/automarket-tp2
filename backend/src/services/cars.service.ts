@@ -5,15 +5,19 @@ import { escapeRegex } from "../lib/escape-regex.js";
 import { CreateCarInput, ListCarsInput, UpdateCarInput } from "../schemas/car.schema.js";
 import { Paginated } from "../types/pagination.types.js";
 
-function buildFilter({ search, used, includeInactive }: ListCarsInput): QueryFilter<ICarDocument> {
+function buildFilter({ search, used, fuel, transmission, bodyType, includeInactive }: ListCarsInput): QueryFilter<ICarDocument> {
   const filter: QueryFilter<ICarDocument> = {};
   if (!includeInactive) filter.active = true;
   if (used !== undefined) filter.used = used;
+  if (fuel) filter.fuel = fuel;
+  if (transmission) filter.transmission = transmission;
+  if (bodyType) filter.bodyType = bodyType;
   if (search) {
     const safe = escapeRegex(search);
     filter.$or = [
       { brand: { $regex: safe, $options: "i" } },
       { modelName: { $regex: safe, $options: "i" } },
+      { engine: { $regex: safe, $options: "i" } },
       { description: { $regex: safe, $options: "i" } },
     ];
   }
