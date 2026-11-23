@@ -1,5 +1,6 @@
 // Ventana modal de confirmacion previa a eliminar. Ofrece baja logica, baja fisica o cancelar.
 import type { Car } from "../types/car";
+import { Icon } from "./Icon";
 
 interface ConfirmModalProps {
   car: Car;
@@ -11,7 +12,7 @@ interface ConfirmModalProps {
 export const ConfirmModal = ({ car, busy, onCancel, onConfirm }: ConfirmModalProps) => {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-900/50 p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="confirm-title"
@@ -21,13 +22,13 @@ export const ConfirmModal = ({ car, busy, onCancel, onConfirm }: ConfirmModalPro
         className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-2xl" aria-hidden="true">
-          🗑️
+        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-600">
+          <Icon name="trash" size={22} />
         </div>
-        <h3 id="confirm-title" className="text-lg font-semibold text-slate-900">
+        <h3 id="confirm-title" className="text-lg font-semibold text-zinc-900">
           ¿Eliminar {car.brand} {car.modelName}?
         </h3>
-        <p className="mt-2 text-sm text-slate-600">
+        <p className="mt-2 text-sm text-zinc-600">
           <strong>Dar de baja</strong> lo oculta del catalogo pero queda en la base (se puede reactivar).{" "}
           <strong>Eliminar definitivamente</strong> lo borra de la base y no se puede deshacer.
         </p>
@@ -36,7 +37,7 @@ export const ConfirmModal = ({ car, busy, onCancel, onConfirm }: ConfirmModalPro
             type="button"
             onClick={onCancel}
             disabled={busy}
-            className="rounded border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
+            className="rounded border border-zinc-300 px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100"
           >
             Cancelar
           </button>
@@ -45,7 +46,7 @@ export const ConfirmModal = ({ car, busy, onCancel, onConfirm }: ConfirmModalPro
               type="button"
               onClick={() => onConfirm(false)}
               disabled={busy}
-              className="rounded bg-amber-500 px-4 py-2 text-sm font-medium text-white hover:bg-amber-600 disabled:opacity-50"
+              className="rounded bg-zinc-950 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 disabled:opacity-50"
             >
               Dar de baja
             </button>

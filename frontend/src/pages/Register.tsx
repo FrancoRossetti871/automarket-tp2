@@ -47,7 +47,7 @@ export const Register = () => {
     <AuthShell title="Crear cuenta" subtitle="Registrate para guardar tu sesion y explorar el catalogo.">
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
         {fields.map(({ name, label, type, autoComplete, placeholder }) => (
-          <label key={name} className="flex flex-col gap-1 text-sm font-medium text-slate-700">
+          <label key={name} className="flex flex-col gap-1 text-sm font-medium text-zinc-700">
             {label}
             <input
               type={type}
@@ -55,7 +55,7 @@ export const Register = () => {
               placeholder={placeholder}
               aria-invalid={!!errors[name]}
               {...register(name)}
-              className="rounded-xl border border-slate-300 bg-white px-3 py-2.5 focus:border-brand-600 focus:outline-none aria-invalid:border-red-500"
+              className="rounded-xl border border-zinc-300 bg-white px-3 py-2.5 focus:border-brand-600 focus:outline-none aria-invalid:border-red-500"
             />
             {errors[name] && <span className="text-xs font-normal text-red-600">{errors[name]?.message}</span>}
           </label>
@@ -68,14 +68,14 @@ export const Register = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="rounded-xl bg-brand-600 py-2.5 font-medium text-white shadow-sm transition hover:bg-brand-700 disabled:opacity-50"
+          className="rounded-xl bg-zinc-950 py-2.5 font-medium text-white shadow-sm transition hover:bg-zinc-800 disabled:opacity-50"
         >
           {isSubmitting ? "Creando..." : "Crear cuenta"}
         </button>
       </form>
-      <p className="mt-6 text-center text-sm text-slate-600">
+      <p className="mt-6 text-center text-sm text-zinc-600">
         ¿Ya tenes cuenta?{" "}
-        <Link to="/login" className="font-semibold text-brand-600 hover:underline">
+        <Link to="/login" className="font-semibold text-zinc-950 hover:underline">
           Ingresar
         </Link>
       </p>

@@ -14,7 +14,7 @@ export const ProtectedRoute = ({ roles }: ProtectedRouteProps) => {
   const location = useLocation();
 
   if (isPending) {
-    return <p className="text-slate-500">Verificando sesion...</p>;
+    return <p className="text-zinc-500">Verificando sesion...</p>;
   }
 
   if (!session) {

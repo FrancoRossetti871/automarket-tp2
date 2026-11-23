@@ -41,7 +41,7 @@ export const Users = () => {
 
   return (
     <section className="flex flex-col gap-6">
-      <h2 className="text-xl font-semibold text-slate-900">Usuarios y roles</h2>
+      <h2 className="text-xl font-semibold text-zinc-900">Usuarios y roles</h2>
 
       {error && (
         <p role="alert" className="text-sm text-red-600">
@@ -50,24 +50,24 @@ export const Users = () => {
       )}
 
       {loading ? (
-        <p className="text-slate-500">Cargando usuarios...</p>
+        <p className="text-zinc-500">Cargando usuarios...</p>
       ) : (
-        <ul className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white shadow-sm">
+        <ul className="divide-y divide-zinc-200 rounded-xl border border-zinc-200 bg-white shadow-sm">
           {users.map((user) => {
             const isMe = user.id === session?.user.id;
             return (
               <li key={user.id} className="flex flex-wrap items-center justify-between gap-4 px-4 py-3">
                 <div>
-                  <p className="font-medium text-slate-900">
-                    {user.name} {isMe && <span className="text-xs text-slate-400">(vos)</span>}
+                  <p className="font-medium text-zinc-900">
+                    {user.name} {isMe && <span className="text-xs text-zinc-400">(vos)</span>}
                   </p>
-                  <p className="text-sm text-slate-500">{user.email}</p>
+                  <p className="text-sm text-zinc-500">{user.email}</p>
                 </div>
                 <select
                   value={user.role ?? "user"}
                   disabled={isMe}
                   onChange={(e) => handleRoleChange(user, e.target.value as UserRole)}
-                  className="rounded border border-slate-300 bg-white px-3 py-1.5 text-sm disabled:opacity-50"
+                  className="rounded border border-zinc-300 bg-white px-3 py-1.5 text-sm disabled:opacity-50"
                   aria-label={`Rol de ${user.name}`}
                 >
                   <option value="user">user</option>
