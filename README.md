@@ -151,4 +151,13 @@ El frontend no necesita variables de entorno: llama siempre a `/api` en su mismo
   1. `/api/*` → `https://<backend>.onrender.com/api/*` — **Rewrite**
   2. `/*` → `/index.html` — **Rewrite** (para que F5 funcione en cualquier ruta)
 
+## Créditos de las imágenes
+
+Las fotos de los autos de ejemplo están en `frontend/public/cars/` y se usan solo con fines educativos:
+
+- Toyota Corolla y Volkswagen Amarok — **Wikimedia Commons** (licencias CC BY / CC BY-SA): `Toyota_Corolla_Hybrid_(E210)_IMG_4338.jpg` y `VW_Amarok_3.0_TDI_4Motion_Style_(II)_–_f_05072025.jpg`.
+- Resto de los modelos — fotos de publicaciones de concesionarias, usadas como ejemplo ilustrativo.
+
+Si un auto no tiene imagen (o la URL falla), la app muestra un banner de color según la marca.
+
 **GitHub OAuth App de producción:** Homepage URL `https://<frontend>.onrender.com` y callback `https://<frontend>.onrender.com/api/auth/callback/github`.
