@@ -8,8 +8,8 @@ Trabajo Práctico 2 de **Metodologías y Desarrollos Web** (UAI, turno mañana) 
 
 | | URL |
 | --- | --- |
-| Frontend (Render Static Site) | `https://<completar>.onrender.com` |
-| Backend (Render Web Service) | `https://<completar>.onrender.com` |
+| Frontend (Render Static Site) | https://automarket-rzzr.onrender.com |
+| Backend (Render Web Service) | https://automarket-api-gcev.onrender.com |
 
 ## Usuarios de prueba
 
