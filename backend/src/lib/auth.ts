@@ -19,10 +19,19 @@ const client = new MongoClient(requireEnv("MONGODB_URI"));
 const githubClientId = process.env.GITHUB_CLIENT_ID;
 const githubClientSecret = process.env.GITHUB_CLIENT_SECRET;
 
+const baseURL = requireEnv("BETTER_AUTH_URL");
+
+// Better Auth rechaza ("Invalid origin") los pedidos que vienen de un origen no confiable.
+// En desarrollo se aceptan localhost y 127.0.0.1 (son el mismo front con distinto nombre);
+// en produccion solo la URL publica del front.
+const trustedOrigins =
+  process.env.NODE_ENV === "production" ? [baseURL] : [baseURL, "http://localhost:5173", "http://127.0.0.1:5173"];
+
 export const auth = betterAuth({
   // URL publica que ve el navegador: la del FRONT, porque /api llega al back a traves del proxy/rewrite.
   // El secret se lee solo de BETTER_AUTH_SECRET.
-  baseURL: requireEnv("BETTER_AUTH_URL"),
+  baseURL,
+  trustedOrigins,
   database: mongodbAdapter(client.db(), { client }),
   emailAndPassword: {
     enabled: true, // hashea la contraseña con scrypt; minimo 8 caracteres por defecto
