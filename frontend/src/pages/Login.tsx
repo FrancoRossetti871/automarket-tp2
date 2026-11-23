@@ -3,6 +3,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, Navigate, useLocation, useNavigate, type Location } from "react-router";
 import { loginSchema, type LoginFormValues } from "../schemas/auth.schema";
 import { authClient, signIn, useSession } from "../lib/auth-client";
+import { AuthShell } from "../components/AuthShell";
+
+const inputClass =
+  "rounded-xl border border-slate-300 bg-white px-3 py-2.5 focus:border-brand-600 focus:outline-none aria-invalid:border-red-500";
 
 export const Login = () => {
   const { data: session } = useSession();
@@ -49,72 +53,75 @@ export const Login = () => {
   const handleGithub = () => signIn.social({ provider: "github", callbackURL: from, errorCallbackURL: "/login" });
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-50 p-6 font-sans">
-      <section className="w-full max-w-sm rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <Link to="/" className="text-sm text-slate-500 underline">
-          ← Volver al catalogo
-        </Link>
-        <h2 className="mt-2 mb-4 text-xl font-semibold text-slate-900">Iniciar sesion</h2>
-        {oauthError && (
-          <p role="alert" className="mb-4 rounded bg-amber-50 p-3 text-sm text-amber-800">
-            {mustLinkGithub
-              ? "Ya tenes una cuenta con ese email. Ingresa tu contraseña para vincular GitHub."
-              : "No se pudo iniciar sesion con GitHub."}
+    <AuthShell title="Iniciar sesion" subtitle="Ingresa con tu email o con tu cuenta de GitHub.">
+      {oauthError && (
+        <p role="alert" className="mb-4 rounded-xl bg-amber-50 p-3 text-sm text-amber-800">
+          {mustLinkGithub
+            ? "Ya tenes una cuenta con ese email. Ingresa tu contraseña para vincular GitHub."
+            : "No se pudo iniciar sesion con GitHub."}
+        </p>
+      )}
+
+      <button
+        type="button"
+        onClick={handleGithub}
+        className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 py-2.5 font-medium text-white transition hover:bg-slate-700"
+      >
+        <svg viewBox="0 0 16 16" className="h-5 w-5" fill="currentColor" aria-hidden="true">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+        </svg>
+        Entrar con GitHub
+      </button>
+
+      <div className="my-5 flex items-center gap-3 text-xs text-slate-400">
+        <span className="h-px flex-1 bg-slate-200" />o con tu email<span className="h-px flex-1 bg-slate-200" />
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
+        <label className="flex flex-col gap-1 text-sm font-medium text-slate-700">
+          Email
+          <input
+            type="email"
+            autoComplete="email"
+            placeholder="tu@email.com"
+            aria-invalid={!!errors.email}
+            {...register("email")}
+            className={inputClass}
+          />
+          {errors.email && <span className="text-xs font-normal text-red-600">{errors.email.message}</span>}
+        </label>
+        <label className="flex flex-col gap-1 text-sm font-medium text-slate-700">
+          Contraseña
+          <input
+            type="password"
+            autoComplete="current-password"
+            placeholder="••••••••"
+            aria-invalid={!!errors.password}
+            {...register("password")}
+            className={inputClass}
+          />
+          {errors.password && <span className="text-xs font-normal text-red-600">{errors.password.message}</span>}
+        </label>
+        {errors.root?.server && (
+          <p role="alert" className="rounded-xl bg-red-50 p-3 text-sm text-red-700">
+            {errors.root.server.message}
           </p>
         )}
-        <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-3">
-          <label className="flex flex-col gap-1 text-sm text-slate-700">
-            Email
-            <input
-              type="email"
-              autoComplete="email"
-              aria-invalid={!!errors.email}
-              {...register("email")}
-              className="rounded border border-slate-300 px-3 py-2 aria-invalid:border-red-500"
-            />
-            {errors.email && <span className="text-xs text-red-600">{errors.email.message}</span>}
-          </label>
-          <label className="flex flex-col gap-1 text-sm text-slate-700">
-            Contraseña
-            <input
-              type="password"
-              autoComplete="current-password"
-              aria-invalid={!!errors.password}
-              {...register("password")}
-              className="rounded border border-slate-300 px-3 py-2 aria-invalid:border-red-500"
-            />
-            {errors.password && <span className="text-xs text-red-600">{errors.password.message}</span>}
-          </label>
-          {errors.root?.server && (
-            <p role="alert" className="text-sm text-red-600">
-              {errors.root.server.message}
-            </p>
-          )}
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="rounded bg-slate-900 py-2 font-medium text-white transition hover:bg-slate-700 disabled:opacity-50"
-          >
-            {isSubmitting ? "Ingresando..." : mustLinkGithub ? "Ingresar y vincular GitHub" : "Ingresar"}
-          </button>
-        </form>
-        <div className="my-4 flex items-center gap-3 text-xs text-slate-400">
-          <span className="h-px flex-1 bg-slate-200" />o<span className="h-px flex-1 bg-slate-200" />
-        </div>
         <button
-          type="button"
-          onClick={handleGithub}
-          className="w-full rounded border border-slate-300 py-2 font-medium text-slate-900 transition hover:bg-slate-100"
+          type="submit"
+          disabled={isSubmitting}
+          className="rounded-xl bg-brand-600 py-2.5 font-medium text-white shadow-sm transition hover:bg-brand-700 disabled:opacity-50"
         >
-          Entrar con GitHub
+          {isSubmitting ? "Ingresando..." : mustLinkGithub ? "Ingresar y vincular GitHub" : "Ingresar"}
         </button>
-        <p className="mt-4 text-center text-sm text-slate-600">
-          ¿No tenes cuenta?{" "}
-          <Link to="/register" className="font-medium text-slate-900 underline">
-            Crear cuenta
-          </Link>
-        </p>
-      </section>
-    </main>
+      </form>
+
+      <p className="mt-6 text-center text-sm text-slate-600">
+        ¿No tenes cuenta?{" "}
+        <Link to="/register" className="font-semibold text-brand-600 hover:underline">
+          Crear cuenta
+        </Link>
+      </p>
+    </AuthShell>
   );
 };

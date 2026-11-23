@@ -20,6 +20,12 @@ export const carSchema = z.object({
   entryDate: z.string().min(1, { error: "La fecha de ingreso es obligatoria" }),
   used: z.boolean(),
   description: z.string().trim().max(500, { error: "Maximo 500 caracteres" }),
+  // Vacio, URL externa (https://...) o ruta propia del front (/cars/foto.jpg)
+  imageUrl: z.union([
+    z.literal(""),
+    z.url({ error: "Ingresa una URL valida (https://...) o una ruta como /cars/foto.jpg" }),
+    z.string().regex(/^\/[\w\-./]+$/, { error: "Ingresa una URL valida (https://...) o una ruta como /cars/foto.jpg" }),
+  ]),
   active: z.boolean(),
 });
 
@@ -34,6 +40,7 @@ export const emptyCar: CarFormValues = {
   entryDate: new Date().toISOString().slice(0, 10),
   used: false,
   description: "",
+  imageUrl: "",
   active: true,
 };
 
@@ -46,5 +53,6 @@ export const toCarFormValues = (car: Car): CarFormValues => ({
   entryDate: car.entryDate.slice(0, 10), // "2026-11-23T00:00:00.000Z" -> "2026-11-23" para el input date
   used: car.used,
   description: car.description ?? "",
+  imageUrl: car.imageUrl ?? "",
   active: car.active,
 });

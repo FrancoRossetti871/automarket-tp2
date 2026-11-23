@@ -18,9 +18,12 @@ export const ConfirmModal = ({ car, busy, onCancel, onConfirm }: ConfirmModalPro
       onClick={onCancel}
     >
       <div
-        className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
+        className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
+        <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-2xl" aria-hidden="true">
+          🗑️
+        </div>
         <h3 id="confirm-title" className="text-lg font-semibold text-slate-900">
           ¿Eliminar {car.brand} {car.modelName}?
         </h3>
