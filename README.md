@@ -15,8 +15,8 @@ Trabajo Práctico 2 de **Metodologías y Desarrollos Web** (UAI, turno mañana) 
 
 | Rol | Email | Contraseña |
 | --- | --- | --- |
-| admin | `admin@autos.com` | `<completar>` |
-| user | `user@autos.com` | `<completar>` |
+| admin | `admin@automarket.com` | `Auto-URztgvso26` |
+| user | `user@automarket.com` | `Auto-fgJI1IIX26` |
 
 ## Entidad elegida: `Car` (auto)
 
@@ -127,7 +127,7 @@ Registrarse desde la app (queda con rol `user`) y después ejecutar:
 
 ```bash
 cd backend
-npm run make-admin -- admin@autos.com
+npm run make-admin -- admin@automarket.com
 ```
 
 A partir de ahí, ese admin puede cambiar el rol de otros usuarios desde `/admin/usuarios`.
