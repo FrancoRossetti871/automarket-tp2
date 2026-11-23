@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Car } from "../types/car";
+import { BODY_TYPES, FUELS, TRACTIONS, TRANSMISSIONS, type Car, type CarPayload } from "../types/car";
 
 const currentYear = new Date().getFullYear();
 
@@ -19,6 +19,30 @@ export const carSchema = z.object({
     .min(0, { error: "El kilometraje no puede ser negativo" }),
   entryDate: z.string().min(1, { error: "La fecha de ingreso es obligatoria" }),
   used: z.boolean(),
+  // Ficha tecnica
+  engine: z.string().trim().max(60, { error: "Maximo 60 caracteres" }),
+  horsepower: z
+    .number({ error: "Ingresa la potencia" })
+    .int({ error: "La potencia debe ser entera" })
+    .min(0, { error: "No puede ser negativa" })
+    .max(2000, { error: "Maximo 2000 CV" }),
+  transmission: z.enum(TRANSMISSIONS),
+  fuel: z.enum(FUELS),
+  bodyType: z.enum(BODY_TYPES),
+  traction: z.enum(TRACTIONS),
+  doors: z
+    .number({ error: "Ingresa la cantidad de puertas" })
+    .int()
+    .min(2, { error: "Minimo 2 puertas" })
+    .max(5, { error: "Maximo 5 puertas" }),
+  color: z.string().trim().max(40, { error: "Maximo 40 caracteres" }),
+  // En el form el equipamiento se escribe uno por linea; al guardar se convierte a lista (toCarPayload).
+  featuresText: z
+    .string()
+    .refine((text) => splitFeatures(text).length <= 20, { error: "Maximo 20 items de equipamiento" })
+    .refine((text) => splitFeatures(text).every((item) => item.length <= 80), {
+      error: "Cada item admite hasta 80 caracteres",
+    }),
   description: z.string().trim().max(500, { error: "Maximo 500 caracteres" }),
   // Vacio, URL externa (https://...) o ruta propia del front (/cars/foto.jpg)
   imageUrl: z.union([
@@ -31,6 +55,13 @@ export const carSchema = z.object({
 
 export type CarFormValues = z.infer<typeof carSchema>;
 
+function splitFeatures(text: string): string[] {
+  return text
+    .split("\n")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
 export const emptyCar: CarFormValues = {
   brand: "",
   modelName: "",
@@ -39,6 +70,15 @@ export const emptyCar: CarFormValues = {
   mileage: 0,
   entryDate: new Date().toISOString().slice(0, 10),
   used: false,
+  engine: "",
+  horsepower: 0,
+  transmission: "manual",
+  fuel: "nafta",
+  bodyType: "sedan",
+  traction: "4x2",
+  doors: 4,
+  color: "",
+  featuresText: "",
   description: "",
   imageUrl: "",
   active: true,
@@ -52,7 +92,22 @@ export const toCarFormValues = (car: Car): CarFormValues => ({
   mileage: car.mileage,
   entryDate: car.entryDate.slice(0, 10), // "2026-11-23T00:00:00.000Z" -> "2026-11-23" para el input date
   used: car.used,
+  engine: car.engine ?? "",
+  horsepower: car.horsepower ?? 0,
+  transmission: car.transmission ?? "manual",
+  fuel: car.fuel ?? "nafta",
+  bodyType: car.bodyType ?? "sedan",
+  traction: car.traction ?? "4x2",
+  doors: car.doors ?? 4,
+  color: car.color ?? "",
+  featuresText: (car.features ?? []).join("\n"),
   description: car.description ?? "",
   imageUrl: car.imageUrl ?? "",
   active: car.active,
+});
+
+// Valores del form -> body que espera la API (features como lista).
+export const toCarPayload = ({ featuresText, ...rest }: CarFormValues): CarPayload => ({
+  ...rest,
+  features: splitFeatures(featuresText),
 });

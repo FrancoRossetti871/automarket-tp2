@@ -2,8 +2,7 @@
 import { createApi, type BaseQueryFn } from "@reduxjs/toolkit/query/react";
 import type { AxiosRequestConfig } from "axios";
 import { api as http, getErrorMessage } from "../lib/api";
-import type { CarFormValues } from "../schemas/car.schema";
-import type { Car, CarsQueryParams, Paginated } from "../types/car";
+import type { Car, CarPayload, CarsQueryParams, Paginated } from "../types/car";
 
 // Usa la misma instancia de axios. El error se guarda ya como string, listo para mostrar.
 const axiosBaseQuery: BaseQueryFn<AxiosRequestConfig, unknown, string> = async (config) => {
@@ -30,11 +29,11 @@ export const carsApi = createApi({
       query: (id) => ({ url: `/cars/${id}` }),
       providesTags: ["Cars"],
     }),
-    createCar: build.mutation<Car, CarFormValues>({
+    createCar: build.mutation<Car, CarPayload>({
       query: (data) => ({ url: "/cars", method: "POST", data }),
       invalidatesTags: ["Cars"],
     }),
-    updateCar: build.mutation<Car, { id: string; values: Partial<CarFormValues> }>({
+    updateCar: build.mutation<Car, { id: string; values: Partial<CarPayload> }>({
       query: ({ id, values }) => ({ url: `/cars/${id}`, method: "PUT", data: values }),
       invalidatesTags: ["Cars"],
     }),
