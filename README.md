@@ -29,7 +29,17 @@ Trabajo Práctico 2 de **Metodologías y Desarrollos Web** (UAI, turno mañana) 
 | `mileage` | número | Kilometraje, ≥ 0 |
 | `entryDate` | fecha | Fecha de ingreso a la concesionaria |
 | `used` | booleano | `true` = usado, `false` = 0 km |
+| `engine` | texto | Motor (ej: `2.0 16V Dual VVT-i`) |
+| `horsepower` | número | Potencia en CV |
+| `transmission` | texto (enum) | `manual` o `automatica` |
+| `fuel` | texto (enum) | `nafta`, `diesel`, `hibrido`, `electrico` o `gnc` |
+| `bodyType` | texto (enum) | `sedan`, `hatchback`, `suv`, `pickup`, `coupe` o `utilitario` |
+| `traction` | texto (enum) | `4x2` o `4x4` |
+| `doors` | número | Cantidad de puertas (2 a 5) |
+| `color` | texto | Color |
+| `features` | lista de textos | Equipamiento destacado (máx. 20 ítems) |
 | `description` | texto | Descripción opcional (máx. 500) |
+| `imageUrl` | texto | URL o ruta de la foto (opcional) |
 | `active` | booleano | Baja lógica: `false` = dado de baja (no aparece en el catálogo) |
 
 ## Stack y arquitectura
@@ -65,7 +75,7 @@ frontend/src
 
 | Método | Ruta | Rol requerido | Descripción |
 | --- | --- | --- | --- |
-| GET | `/api/cars` | público | Lista autos activos. Query: `page`, `limit`, `search`, `used`, `sortBy`, `sortOrder`. Un admin puede enviar `includeInactive=true` para ver también los dados de baja |
+| GET | `/api/cars` | público | Lista autos activos. Query: `page`, `limit`, `search`, `used`, `fuel`, `transmission`, `bodyType`, `sortBy`, `sortOrder`. Un admin puede enviar `includeInactive=true` para ver también los dados de baja |
 | GET | `/api/cars/:id` | público | Detalle de un auto (404 si no existe) |
 | POST | `/api/cars` | admin | Crea un auto (201) |
 | PUT / PATCH | `/api/cars/:id` | admin | Modifica un auto |
