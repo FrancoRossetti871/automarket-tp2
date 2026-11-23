@@ -9,6 +9,7 @@ export interface Car {
   entryDate: string;
   used: boolean;
   description: string;
+  imageUrl?: string;
   active: boolean;
   createdAt: string;
   updatedAt: string;
@@ -25,5 +26,7 @@ export interface CarsQueryParams {
   limit?: number;
   search?: string;
   used?: "true" | "false";
+  sortBy?: "createdAt" | "brand" | "year" | "price" | "entryDate";
+  sortOrder?: "asc" | "desc";
   includeInactive?: "true";
 }
